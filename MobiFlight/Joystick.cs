@@ -43,6 +43,17 @@ namespace MobiFlight
         List<JoystickDevice> POV = new List<JoystickDevice>();
         public static string[] AxisNames = { "X", "Y", "Z", "RotationX", "RotationY", "RotationZ", "Slider1", "Slider2"};
 
+        // Constants for averaging axis values
+        private static readonly int ADC_MAX_AVERAGE = 8; // must be 2^n
+        private static readonly int ADC_MAX_AVERAGE_LOG2 = 3; // Must be LOG2(ADC_MAX_AVERAGE)
+
+        // Holds the last ADC_MAX_AVERAGE values for each axis
+        public static Dictionary<string, int[]> AxisAverageBuffer = new Dictionary<string, int[]>();
+        // Holds the sum of the last ADC_MAX_AVERAGE valeus for each axis
+        public static Dictionary<string, int> AxisAverageTotal = new Dictionary<string, int>();
+        // Holds the last position used in the AxisAverageBuffer for each axis
+        public static Dictionary<string, int> AxisAverageLastPosition = new Dictionary<string, int>();
+
         public static bool IsJoystickSerial(string serial)
         {
             return (serial != null && serial.Contains(SerialPrefix));
@@ -103,6 +114,11 @@ namespace MobiFlight
                         continue;
                     }
                     Axes.Add(new JoystickDevice() { Name = AxisPrefix + OffsetAxisName, Label = name, Type = JoystickDeviceType.Axis });
+
+                    AxisAverageBuffer[OffsetAxisName] = new int[ADC_MAX_AVERAGE];
+                    AxisAverageLastPosition[OffsetAxisName] = 0;
+                    AxisAverageTotal[OffsetAxisName] = 0;
+
                     Log.Instance.log("EnumerateDevices: " + joystick.Information.InstanceName + ": Aspect : " + aspect.ToString() + ":Offset:" + offset + ":Usage:" + usage + ":" + "Axis: " + name, LogSeverity.Debug);
 
                 }
@@ -236,22 +252,39 @@ namespace MobiFlight
 
                     if (!StateExists() || IsValidAxis(CurrentAxis))
                     {
-                        int oldValue = 0;
-                        if (StateExists())
-                        {
-                            oldValue = GetValueForAxisFromState(CurrentAxis, state);
-                        }
-                            
-                        int newValue = GetValueForAxisFromState(CurrentAxis, newState);
+                        String RawAxisName = Axes[CurrentAxis].Name.Replace(AxisPrefix, "");
+
+                        // The raw value read from the axis. This will get averaged with previous values to calculate the
+                        // new value
+                        int rawValue = GetValueForAxisFromState(CurrentAxis, newState);
+
+                        // Save the current axis value to compare with the new one later on
+                        int oldValue = AxisAverageTotal[RawAxisName] >> ADC_MAX_AVERAGE_LOG2;
+
+                        // Subtract oldest value to save the newest value
+                        AxisAverageTotal[RawAxisName] -= AxisAverageBuffer[RawAxisName][AxisAverageLastPosition[RawAxisName]];
+                        // Store the new value
+                        AxisAverageBuffer[RawAxisName][AxisAverageLastPosition[RawAxisName]] = rawValue;
+                        // Add the new value to the average
+                        AxisAverageTotal[RawAxisName] += rawValue;
+                        // Increment the pointer
+                        AxisAverageLastPosition[RawAxisName]++;
+                        // Loop the pointer around if necessary
+                        AxisAverageLastPosition[RawAxisName] &= ADC_MAX_AVERAGE - 1;
+
+                        // The new value is a weighted average of the old values
+                        int newValue = AxisAverageTotal[RawAxisName] >> ADC_MAX_AVERAGE_LOG2;
 
                         if (!StateExists() || oldValue != newValue)
+                        {
                             OnButtonPressed?.Invoke(this, new InputEventArgs()
                             {
                                 DeviceId = Axes[CurrentAxis].Label,
                                 Serial = SerialPrefix + joystick.Information.InstanceGuid.ToString(),
                                 Type = DeviceType.AnalogInput,
-                                Value = newValue
+                                Value = AxisAverageTotal[RawAxisName] >> ADC_MAX_AVERAGE_LOG2
                             });
+                        }
                     }
                 }
             }
