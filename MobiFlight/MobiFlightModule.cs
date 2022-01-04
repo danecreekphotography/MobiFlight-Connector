@@ -80,7 +80,8 @@ namespace MobiFlight
             SetLcdDisplayI2C,       // 25
             SetModuleBrightness,    // 26,
             SetShiftRegisterPins,   // 27
-            AnalogChange            // 28           
+            AnalogChange,            // 28
+            Memory // 29
         };
 
         public delegate void InputDeviceEventHandler(object sender, InputEventArgs e);
@@ -163,15 +164,14 @@ namespace MobiFlight
                         if (InfoCommand.Ok)
                         {
                             _config = new Config.Config(InfoCommand.ReadStringArg());
-                        }
-                        else
+                    }
+                    else
                         {
                             Log.Instance.log("MobiflightModule.Config: !InfoCommand.Ok. Init with empty config.", LogSeverity.Debug);
                             _config = new Config.Config();
                         }
-                            
-                    }
-                    return _config;
+                }
+                return _config;
                 }
 
             set
@@ -668,6 +668,19 @@ namespace MobiFlight
             return isOk;
         }
 
+        private void GetMemoryStats()
+        {
+            // Hack to get the current memory.
+            var command = new SendCommand((int)MobiFlightModule.Command.Memory, (int)MobiFlightModule.Command.Info, CommandTimeout);
+            var memCommand = _cmdMessenger.SendCommand(command);
+
+            var totalAvailableMemory = memCommand.ReadInt16Arg();
+            var largestAvailableBlock = memCommand.ReadInt16Arg();
+            var fragmentation = 100 - largestAvailableBlock * 100.0 / totalAvailableMemory;
+
+            Log.Instance.log($"Total available memory: {totalAvailableMemory}\tLargest available block: {largestAvailableBlock}\t Fragmentation: {fragmentation}%.", LogSeverity.Debug);
+        }
+
         public IModuleInfo GetInfo()
         {
             MobiFlightModuleInfo devInfo = new MobiFlightModuleInfo() {
@@ -691,17 +704,19 @@ namespace MobiFlight
                 devInfo.Name = InfoCommand.ReadStringArg();                
                 devInfo.Serial = InfoCommand.ReadStringArg();
                 String v = InfoCommand.ReadStringArg();
+
                 if (v.IndexOf(":") == -1)
                     devInfo.Version = v;
                 else
                 {
                     devInfo.Version = "1.0.0";
                 }
-
                 Name = devInfo.Name;
                 Version = devInfo.Version;
                 Serial = devInfo.Serial;
             }
+
+            GetMemoryStats();
 
             // Get the board specifics based on the MobiFlight type returned by the firmware. If there's no match,
             // either because it is a generic Arduino without the firmware installed or because there
@@ -766,6 +781,8 @@ namespace MobiFlight
                     isOk = StatusCommand.Ok;
                     if (isOk) Log.Instance.log("Config activated.", LogSeverity.Debug);
                     else Log.Instance.log("Config NOT activated SUCCESSFULLY.", LogSeverity.Debug);
+
+                    GetMemoryStats();
                 }
                 else
                 {
