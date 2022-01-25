@@ -127,8 +127,7 @@ namespace MobiFlight
                         Log.Instance.log($"Checking for compatible module: {hardwareId}", LogSeverity.Debug);
 
                         // Look for a board definition that matches the hardware ID.
-                        Board board;
-                        board = BoardDefinitions.GetBoardByHardwareId(hardwareId);
+                        var board = BoardDefinitions.GetBoardByHardwareId(hardwareId);
 
                         // If no matching board definition is found at this point then it's an incompatible board and just keep going.
                         if (board == null)
@@ -146,7 +145,7 @@ namespace MobiFlight
                             case AddressMode.COM:
                                 // The rest of the code expects the port address to be "COM3". Take the port number provided by libusb and put COM in front
                                 // of it so the rest of the code doesn't have to change.
-                                // BUG: This doesn't actuall work. PortNumber isn't what I thought it was :(
+                                // BUG: This doesn't actually work. PortNumber isn't what I thought it was :(
                                 portName = $"COM{deviceInfo.PortNumber}";
                                 break;
                             case AddressMode.BusAndAddress:
