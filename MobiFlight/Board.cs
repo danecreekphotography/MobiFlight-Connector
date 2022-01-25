@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 namespace MobiFlight
 {
     /// <summary>
+    /// How to reference a device when making a connection via the flashing too.
+    /// </summary>
+    public enum AddressMode
+    {
+        /// <summary>
+        /// Use COM port number to address the device, e.g. "COM3".
+        /// </summary>
+        COM,
+        /// <summary>
+        /// Use a bus number and address to reference the device, e.g. bus 2 address 15.
+        /// </summary>
+        BusAndAddress
+    }
+
+    /// <summary>
     /// Settings for flashing Arduino devices with avrdude.
     /// </summary>
     public class AvrDudeSettings
@@ -52,6 +67,11 @@ namespace MobiFlight
     /// </summary>
     public class Connection
     {
+        /// <summary>
+        /// How to reference the device when making a USB connection.
+        /// </summary>
+        public AddressMode AddressMode;
+
         /// <summary>
         /// Number of milliseconds to wait before loading the configuration after initially connecting to the board.
         /// </summary>

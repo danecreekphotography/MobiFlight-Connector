@@ -7,6 +7,8 @@ using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 
 namespace MobiFlight
 {
@@ -108,60 +110,50 @@ namespace MobiFlight
         {
             var result = new Dictionary<string, Board>();
 
-            RegistryKey regLocalMachine = Registry.LocalMachine;
-
-            string[] regPaths = {
-                    @"SYSTEM\CurrentControlSet\Enum\USB",
-                    @"SYSTEM\CurrentControlSet\Enum\FTDIBUS"
-            };
-
-            foreach (var regPath in regPaths)
+            using (var context = new UsbContext())
             {
-
-                RegistryKey regUSB = regLocalMachine.OpenSubKey(regPath);
-                if (regUSB == null) continue;
-
-                foreach (String regDevice in regUSB.GetSubKeyNames())
+                var allDevices = context.List();
+                foreach (UsbDevice deviceInfo in allDevices)
                 {
-                    String message = null;
-                    Log.Instance.log($"Checking for compatible module: {regDevice}", LogSeverity.Debug);
+                    // Existing code expects a VID/PID string that looks like "VID_2341&PID_0010" so construct that string so the rest of the code doesn't have to change.
+                    var identifier = $"VID_{String.Format("{0:X4}", deviceInfo.VendorId)}&PID_{String.Format("{0:X4}", deviceInfo.ProductId)}";
+                    Log.Instance.log($"Checking for compatible module: {identifier}", LogSeverity.Debug);
 
-                    foreach (String regSubDevice in regUSB.OpenSubKey(regDevice).GetSubKeyNames())
+                    Board board;
+                    board = BoardDefinitions.GetBoardByHardwareId(identifier);
+
+                    // If no matching board definition is found at this point then it's an incompatible board and just keep going.
+                    if (board == null)
                     {
-                        Board board;
-                        String FriendlyName = regUSB.OpenSubKey(regDevice).OpenSubKey(regSubDevice).GetValue("FriendlyName") as String;
-                        if (FriendlyName == null) continue;
-
-                        // Check to see if any board configurations exist
-                        board = BoardDefinitions.GetBoardByFriendlyName(FriendlyName) ?? BoardDefinitions.GetBoardByHardwareId(regDevice);
-
-                        // If no matching board definition is found at this point then it's an incompatible board and just keep going.
-                        if (board == null)
-                        {
-                            Log.Instance.log($"Incompatible module skipped: {FriendlyName} - VID/PID: {regDevice}", LogSeverity.Debug);
-                            continue;
-                        }
-
-                        // The board is a known type so test and see if a COM port is registered for it. If not, skip it.
-                        String portName = regUSB.OpenSubKey(regDevice).OpenSubKey(regSubDevice).OpenSubKey("Device Parameters").GetValue("PortName") as String;
-
-                        if (portName == null)
-                        {
-                            Log.Instance.log($"Arduino device has no port information: {regDevice}", LogSeverity.Debug);
-                            continue;
-                        }
-
-                        // Safety check to ensure duplicate entires in the registry don't result in duplicate entires in the list.
-                        if (result.ContainsKey(portName))
-                        {
-                            Log.Instance.log($"Duplicate entry for port: {board.Info.FriendlyName} {portName}", LogSeverity.Debug);
-                            continue;
-                        }
-
-                        result.Add(portName, board);
-                        Log.Instance.log($"Found potentially compatible module ({FriendlyName}): {regDevice}@{portName}", LogSeverity.Debug);
+                        Log.Instance.log($"Incompatible module skipped: VID/PID: {identifier}", LogSeverity.Debug);
+                        continue;
                     }
+
+                    // At this point it's a matching device so all that's left is to get the port used to talk to the device. This
+                    // is necessary when flashing as it gets passed to the various firmware flashing tools (avrdude, picotool, etc.).
+                    // Depending on the board type the port may be a COM port or it might be a combination of bus number and address.
+                    String portName;
+                    switch (board.Connection.AddressMode)
+                    {
+                        case AddressMode.COM:
+                            // The rest of the code expects the port address to be "COM3". Take the port number provided by libusb and put COM in front
+                            // of it so the rest of the code doesn't have to change.
+                            portName = $"COM{deviceInfo.PortNumber}";
+                            break;
+                        case AddressMode.BusAndAddress:
+                            // For devices that are referenced using the bus number and address just combine the two with a period in the middle
+                            // to make it easy to pass it around in all the existing places in code that expect a string for the port.
+                            portName = $"{deviceInfo.BusNumber}.{deviceInfo.Address}";
+                            break;
+                        default:
+                            throw new Exception($"Board address mode {board.Connection.AddressMode} is not supported.");
+                    }
+
+                    result.Add(portName, board);
+                    Log.Instance.log($"Found potentially compatible module: {identifier}@{portName}", LogSeverity.Debug);
                 }
+
+                context.Dispose();
             }
 
             return result;

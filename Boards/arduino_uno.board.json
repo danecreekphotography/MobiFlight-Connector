@@ -8,6 +8,7 @@
     "Timeout": 15000
   },
   "Connection": {
+    "AddressMode":  0,
     "ConnectionDelay": 1750,
     "DelayAfterFirmwareUpdate": 0,
     "DtrEnable": true,

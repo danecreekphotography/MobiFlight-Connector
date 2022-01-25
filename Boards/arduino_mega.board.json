@@ -8,6 +8,7 @@
     "Timeout": 15000
   },
   "Connection": {
+    "AddressMode":  1,
     "ConnectionDelay": 1250,
     "ExtraConnectionRetry": false,
     "ForceResetOnFirmwareUpdate": false,

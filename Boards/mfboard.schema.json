@@ -60,6 +60,12 @@
         "MessageSize"
       ],
       "properties": {
+        "AddressMode": {
+          "$id": "#root/Connection/AddressMode",
+          "title": "Addressmode",
+          "description": "How to reference the device when making a USB connection.",
+          "type": "integer"
+        }
         "ConnectionDelay": {
           "$id": "#root/Connection/ConnectionDelay",
           "title": "Connectiondelay",
