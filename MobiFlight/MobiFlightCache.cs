@@ -112,48 +112,49 @@ namespace MobiFlight
 
             using (var context = new UsbContext())
             {
-                var allDevices = context.List();
-                foreach (UsbDevice deviceInfo in allDevices)
+                using (var allDevices = context.List())
                 {
-                    // Existing code expects a VID/PID string that looks like "VID_2341&PID_0010" so construct that string so the rest of the code doesn't have to change.
-                    var identifier = $"VID_{String.Format("{0:X4}", deviceInfo.VendorId)}&PID_{String.Format("{0:X4}", deviceInfo.ProductId)}";
-                    Log.Instance.log($"Checking for compatible module: {identifier}", LogSeverity.Debug);
-
-                    Board board;
-                    board = BoardDefinitions.GetBoardByHardwareId(identifier);
-
-                    // If no matching board definition is found at this point then it's an incompatible board and just keep going.
-                    if (board == null)
+                    foreach (UsbDevice deviceInfo in allDevices)
                     {
-                        Log.Instance.log($"Incompatible module skipped: VID/PID: {identifier}", LogSeverity.Debug);
-                        continue;
-                    }
+                        // Existing code expects a VID/PID string that looks like "VID_2341&PID_0010" so construct that string so the rest of the code doesn't have to change.
+                        var hardwareId = $"VID_{String.Format("{0:X4}", deviceInfo.VendorId)}&PID_{String.Format("{0:X4}", deviceInfo.ProductId)}";
+                        Log.Instance.log($"Checking for compatible module: {hardwareId}", LogSeverity.Debug);
 
-                    // At this point it's a matching device so all that's left is to get the port used to talk to the device. This
-                    // is necessary when flashing as it gets passed to the various firmware flashing tools (avrdude, picotool, etc.).
-                    // Depending on the board type the port may be a COM port or it might be a combination of bus number and address.
-                    String portName;
-                    switch (board.Connection.AddressMode)
-                    {
-                        case AddressMode.COM:
-                            // The rest of the code expects the port address to be "COM3". Take the port number provided by libusb and put COM in front
-                            // of it so the rest of the code doesn't have to change.
-                            portName = $"COM{deviceInfo.PortNumber}";
-                            break;
-                        case AddressMode.BusAndAddress:
-                            // For devices that are referenced using the bus number and address just combine the two with a period in the middle
-                            // to make it easy to pass it around in all the existing places in code that expect a string for the port.
-                            portName = $"{deviceInfo.BusNumber}.{deviceInfo.Address}";
-                            break;
-                        default:
-                            throw new Exception($"Board address mode {board.Connection.AddressMode} is not supported.");
-                    }
+                        // Look for a board definition that matches the hardware ID.
+                        Board board;
+                        board = BoardDefinitions.GetBoardByHardwareId(hardwareId);
 
-                    result.Add(portName, board);
-                    Log.Instance.log($"Found potentially compatible module: {identifier}@{portName}", LogSeverity.Debug);
+                        // If no matching board definition is found at this point then it's an incompatible board and just keep going.
+                        if (board == null)
+                        {
+                            Log.Instance.log($"Incompatible module skipped: {hardwareId}", LogSeverity.Debug);
+                            continue;
+                        }
+
+                        // It's a matching device so all that's left is to get the port name used to talk to the device. This
+                        // is necessary when flashing as it gets passed to the various firmware flashing tools (avrdude, picotool, etc.).
+                        // Depending on the board type the port name may be a COM port or it might be a combination of bus number and address.
+                        String portName;
+                        switch (board.Connection.AddressMode)
+                        {
+                            case AddressMode.COM:
+                                // The rest of the code expects the port address to be "COM3". Take the port number provided by libusb and put COM in front
+                                // of it so the rest of the code doesn't have to change.
+                                portName = $"COM{deviceInfo.PortNumber}";
+                                break;
+                            case AddressMode.BusAndAddress:
+                                // For devices that are referenced using the bus number and address just combine the two with a period in the middle
+                                // to make it easy to pass it around in all the existing places in code that expect a string for the port.
+                                portName = $"{deviceInfo.BusNumber}.{deviceInfo.Address}";
+                                break;
+                            default:
+                                throw new Exception($"Board address mode {board.Connection.AddressMode} is not supported.");
+                        }
+
+                        result.Add(portName, board);
+                        Log.Instance.log($"Found potentially compatible module: {hardwareId}@{portName}", LogSeverity.Debug);
+                    }
                 }
-
-                context.Dispose();
             }
 
             return result;
