@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.LibUsb;
+using System.Collections.ObjectModel;
 
 namespace MobiFlight
 {
@@ -106,6 +107,11 @@ namespace MobiFlight
             return Modules.Values;
         }
 
+        /// <summary>
+        /// Looks through all the connected USB devices for ones that are known board types
+        /// </summary>
+        /// <returns>A dictionary of matching boards, indexed by port name</returns>
+        /// <exception cref="Exception">Throws if the detected board type has an unsupported address mode.</exception>
         private static Dictionary<string, Board> getSupportedPorts()
         {
             var result = new Dictionary<string, Board>();
@@ -140,6 +146,7 @@ namespace MobiFlight
                             case AddressMode.COM:
                                 // The rest of the code expects the port address to be "COM3". Take the port number provided by libusb and put COM in front
                                 // of it so the rest of the code doesn't have to change.
+                                // BUG: This doesn't actuall work. PortNumber isn't what I thought it was :(
                                 portName = $"COM{deviceInfo.PortNumber}";
                                 break;
                             case AddressMode.BusAndAddress:
