@@ -260,6 +260,7 @@ namespace MobiFlight
         {
             simConnectCache.Start();
             xplaneCache.Start();
+            MQTTManager.Connect();
             timer.Enabled = true;
         }
 
@@ -269,6 +270,7 @@ namespace MobiFlight
             isExecuting = false;
             mobiFlightCache.Stop();
             simConnectCache.Stop();
+            MQTTManager.Disconnect();
             xplaneCache.Stop();
             joystickManager.Stop();
             ClearErrorMessages();
@@ -717,6 +719,8 @@ namespace MobiFlight
         private string ExecuteDisplay(string value, OutputConfigItem cfg)
         {
             string serial = SerialNumber.ExtractSerial(cfg.DisplaySerial);
+
+            MQTTManager.Publish("mobiflight/output/test", value);
 
             if (serial == "" && 
                 cfg.DisplayType!="InputAction") 
