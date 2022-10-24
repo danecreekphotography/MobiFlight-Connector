@@ -8,6 +8,7 @@ using System.Drawing;
 using MobiFlight;
 using MobiFlight.FSUIPC;
 using MobiFlight.Base;
+using MobiFlight.MQTT;
 using MobiFlight.SimConnectMSFS;
 using MobiFlight.Config;
 using MobiFlight.OutputConfig;
@@ -720,11 +721,16 @@ namespace MobiFlight
         {
             string serial = SerialNumber.ExtractSerial(cfg.DisplaySerial);
 
-            MQTTManager.Publish("mobiflight/output/test", value);
 
             if (serial == "" && 
                 cfg.DisplayType!="InputAction") 
                 return value.ToString();
+
+            if (cfg.DisplayType == MqttMessageConfig.TYPE)
+            {
+                MQTTManager.Publish(cfg.MqttMessage.Topic, value);
+                return value.ToString();
+            }
 
             if (serial.IndexOf(Joystick.SerialPrefix)==0)
             {

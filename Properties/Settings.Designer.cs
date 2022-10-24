@@ -443,5 +443,22 @@ namespace MobiFlight.Properties {
                 this["IgnoredComPortsList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<MQTTServerSettings xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <Address>192.168.1.172</Address>
+  <Port>1883</Port>
+  <Username>mqtt</Username>
+</MQTTServerSettings>")]
+        public string MqttServerConfig {
+            get {
+                return ((string)(this["MqttServerConfig"]));
+            }
+            set {
+                this["MqttServerConfig"] = value;
+            }
+        }
     }
 }

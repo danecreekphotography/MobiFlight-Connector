@@ -108,5 +108,13 @@
     <Setting Name="IgnoredComPortsList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="MqttServerConfig" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;MQTTServerSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Address&gt;192.168.1.172&lt;/Address&gt;
+  &lt;Port&gt;1883&lt;/Port&gt;
+  &lt;Username&gt;mqtt&lt;/Username&gt;
+&lt;/MQTTServerSettings&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
