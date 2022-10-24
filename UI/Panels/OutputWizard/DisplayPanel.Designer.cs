@@ -46,12 +46,15 @@
             this.displayPinTestButton = new System.Windows.Forms.Button();
             this.groupBoxDisplaySettings = new System.Windows.Forms.GroupBox();
             this.inputActionGroupBox = new System.Windows.Forms.GroupBox();
-            this.buttonPanel1 = new MobiFlight.UI.Panels.Input.ButtonPanel();
-            this.analogPanel1 = new MobiFlight.UI.Panels.Input.AnalogPanel();
             this.AnalogInputActionLabel = new System.Windows.Forms.Label();
             this.ButtonInputActionLabel = new System.Windows.Forms.Label();
             this.OutputDevicePanel = new System.Windows.Forms.Panel();
             this.DisplayPanelTextLabel = new System.Windows.Forms.Label();
+            this.mqttMessageGroupBox = new System.Windows.Forms.GroupBox();
+            this.topicLabel = new System.Windows.Forms.Label();
+            this.mqttTopicTextBox = new System.Windows.Forms.TextBox();
+            this.buttonPanel1 = new MobiFlight.UI.Panels.Input.ButtonPanel();
+            this.analogPanel1 = new MobiFlight.UI.Panels.Input.AnalogPanel();
             this.displayTypeGroupBox.SuspendLayout();
             this.InputActionTypePanel.SuspendLayout();
             this.DisplayTypePanel.SuspendLayout();
@@ -59,6 +62,7 @@
             this.testSettingsGroupBox.SuspendLayout();
             this.inputActionGroupBox.SuspendLayout();
             this.OutputDevicePanel.SuspendLayout();
+            this.mqttMessageGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // displayTypeGroupBox
@@ -72,9 +76,9 @@
             // 
             // InputActionTypePanel
             // 
-            resources.ApplyResources(this.InputActionTypePanel, "InputActionTypePanel");
             this.InputActionTypePanel.Controls.Add(this.InputTypeAnalogRadioButton);
             this.InputActionTypePanel.Controls.Add(this.InputTypeButtonRadioButton);
+            resources.ApplyResources(this.InputActionTypePanel, "InputActionTypePanel");
             this.InputActionTypePanel.Name = "InputActionTypePanel";
             // 
             // InputTypeAnalogRadioButton
@@ -95,11 +99,11 @@
             // 
             // DisplayTypePanel
             // 
-            resources.ApplyResources(this.DisplayTypePanel, "DisplayTypePanel");
             this.DisplayTypePanel.Controls.Add(this.arcazeSerialLabel);
             this.DisplayTypePanel.Controls.Add(this.displayModuleNameComboBox);
             this.DisplayTypePanel.Controls.Add(this.displayTypeComboBoxLabel);
             this.DisplayTypePanel.Controls.Add(this.displayTypeComboBox);
+            resources.ApplyResources(this.DisplayTypePanel, "DisplayTypePanel");
             this.DisplayTypePanel.Name = "DisplayTypePanel";
             // 
             // arcazeSerialLabel
@@ -109,12 +113,12 @@
             // 
             // displayModuleNameComboBox
             // 
-            resources.ApplyResources(this.displayModuleNameComboBox, "displayModuleNameComboBox");
             this.displayModuleNameComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.displayModuleNameComboBox.FormattingEnabled = true;
             this.displayModuleNameComboBox.Items.AddRange(new object[] {
             resources.GetString("displayModuleNameComboBox.Items"),
             resources.GetString("displayModuleNameComboBox.Items1")});
+            resources.ApplyResources(this.displayModuleNameComboBox, "displayModuleNameComboBox");
             this.displayModuleNameComboBox.Name = "displayModuleNameComboBox";
             this.displayModuleNameComboBox.SelectedIndexChanged += new System.EventHandler(this.displaySerialComboBox_SelectedIndexChanged);
             // 
@@ -125,31 +129,32 @@
             // 
             // displayTypeComboBox
             // 
-            resources.ApplyResources(this.displayTypeComboBox, "displayTypeComboBox");
             this.displayTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.displayTypeComboBox.FormattingEnabled = true;
             this.displayTypeComboBox.Items.AddRange(new object[] {
             resources.GetString("displayTypeComboBox.Items"),
             resources.GetString("displayTypeComboBox.Items1"),
             resources.GetString("displayTypeComboBox.Items2")});
+            resources.ApplyResources(this.displayTypeComboBox, "displayTypeComboBox");
             this.displayTypeComboBox.Name = "displayTypeComboBox";
             this.displayTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.displayTypeComboBox_SelectedIndexChanged);
             // 
             // OutputTypePanel
             // 
-            resources.ApplyResources(this.OutputTypePanel, "OutputTypePanel");
             this.OutputTypePanel.Controls.Add(this.OutputTypeComboBox);
             this.OutputTypePanel.Controls.Add(this.OutputTypeLabel);
+            resources.ApplyResources(this.OutputTypePanel, "OutputTypePanel");
             this.OutputTypePanel.Name = "OutputTypePanel";
             // 
             // OutputTypeComboBox
             // 
-            resources.ApplyResources(this.OutputTypeComboBox, "OutputTypeComboBox");
             this.OutputTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OutputTypeComboBox.FormattingEnabled = true;
             this.OutputTypeComboBox.Items.AddRange(new object[] {
             resources.GetString("OutputTypeComboBox.Items"),
-            resources.GetString("OutputTypeComboBox.Items1")});
+            resources.GetString("OutputTypeComboBox.Items1"),
+            resources.GetString("OutputTypeComboBox.Items2")});
+            resources.ApplyResources(this.OutputTypeComboBox, "OutputTypeComboBox");
             this.OutputTypeComboBox.Name = "OutputTypeComboBox";
             this.OutputTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.OutputTypeComboBox_SelectedIndexChanged);
             // 
@@ -160,9 +165,9 @@
             // 
             // testSettingsGroupBox
             // 
-            resources.ApplyResources(this.testSettingsGroupBox, "testSettingsGroupBox");
             this.testSettingsGroupBox.Controls.Add(this.displayPinTestStopButton);
             this.testSettingsGroupBox.Controls.Add(this.displayPinTestButton);
+            resources.ApplyResources(this.testSettingsGroupBox, "testSettingsGroupBox");
             this.testSettingsGroupBox.Name = "testSettingsGroupBox";
             this.testSettingsGroupBox.TabStop = false;
             // 
@@ -198,16 +203,6 @@
             this.inputActionGroupBox.Name = "inputActionGroupBox";
             this.inputActionGroupBox.TabStop = false;
             // 
-            // buttonPanel1
-            // 
-            resources.ApplyResources(this.buttonPanel1, "buttonPanel1");
-            this.buttonPanel1.Name = "buttonPanel1";
-            // 
-            // analogPanel1
-            // 
-            resources.ApplyResources(this.analogPanel1, "analogPanel1");
-            this.analogPanel1.Name = "analogPanel1";
-            // 
             // AnalogInputActionLabel
             // 
             resources.ApplyResources(this.AnalogInputActionLabel, "AnalogInputActionLabel");
@@ -231,10 +226,39 @@
             resources.ApplyResources(this.DisplayPanelTextLabel, "DisplayPanelTextLabel");
             this.DisplayPanelTextLabel.Name = "DisplayPanelTextLabel";
             // 
+            // mqttMessageGroupBox
+            // 
+            resources.ApplyResources(this.mqttMessageGroupBox, "mqttMessageGroupBox");
+            this.mqttMessageGroupBox.Controls.Add(this.topicLabel);
+            this.mqttMessageGroupBox.Controls.Add(this.mqttTopicTextBox);
+            this.mqttMessageGroupBox.Name = "mqttMessageGroupBox";
+            this.mqttMessageGroupBox.TabStop = false;
+            // 
+            // topicLabel
+            // 
+            resources.ApplyResources(this.topicLabel, "topicLabel");
+            this.topicLabel.Name = "topicLabel";
+            // 
+            // mqttTopicTextBox
+            // 
+            resources.ApplyResources(this.mqttTopicTextBox, "mqttTopicTextBox");
+            this.mqttTopicTextBox.Name = "mqttTopicTextBox";
+            // 
+            // buttonPanel1
+            // 
+            resources.ApplyResources(this.buttonPanel1, "buttonPanel1");
+            this.buttonPanel1.Name = "buttonPanel1";
+            // 
+            // analogPanel1
+            // 
+            resources.ApplyResources(this.analogPanel1, "analogPanel1");
+            this.analogPanel1.Name = "analogPanel1";
+            // 
             // DisplayPanel
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.mqttMessageGroupBox);
             this.Controls.Add(this.inputActionGroupBox);
             this.Controls.Add(this.OutputDevicePanel);
             this.Controls.Add(this.DisplayPanelTextLabel);
@@ -249,6 +273,8 @@
             this.inputActionGroupBox.PerformLayout();
             this.OutputDevicePanel.ResumeLayout(false);
             this.OutputDevicePanel.PerformLayout();
+            this.mqttMessageGroupBox.ResumeLayout(false);
+            this.mqttMessageGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,5 +305,8 @@
         private Input.ButtonPanel buttonPanel1;
         private System.Windows.Forms.Label AnalogInputActionLabel;
         private System.Windows.Forms.Label ButtonInputActionLabel;
+        private System.Windows.Forms.GroupBox mqttMessageGroupBox;
+        private System.Windows.Forms.Label topicLabel;
+        private System.Windows.Forms.TextBox mqttTopicTextBox;
     }
 }

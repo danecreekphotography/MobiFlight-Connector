@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MobiFlight.UI.Dialogs;
 using MobiFlight.Base;
+using MQTTnet.Server;
+using MobiFlight.MQTT;
+using MobiFlight.OutputConfig;
 
 namespace MobiFlight.UI.Panels
 {
@@ -586,9 +589,13 @@ namespace MobiFlight.UI.Panels
                             case MobiFlightShiftRegister.TYPE:
                                 row["OutputName"] = cfgItem.ShiftRegister.ToString();
                                 break;
+                            case MqttMessageConfig.TYPE:
+                                row["OutputName"] = cfgItem.MqttMessage.ToString();
+                                break;
 
                         }
-                    } else if(cfgItem.DisplayType=="InputAction")
+                    }
+                    else if(cfgItem.DisplayType=="InputAction")
                     {
                         row["OutputType"] = cfgItem.DisplayType;
                         if (cfgItem.ButtonInputConfig!=null)

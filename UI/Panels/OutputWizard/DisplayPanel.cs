@@ -1,6 +1,9 @@
 ﻿using MobiFlight.Base;
 using MobiFlight.InputConfig;
+using MobiFlight.MQTT;
+using MobiFlight.OutputConfig;
 using MobiFlight.UI.Panels.Settings.Device;
+using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -120,15 +123,31 @@ namespace MobiFlight.UI.Panels.OutputWizard
             stepperPanel.OnStepperSelected += StepperPanel_OnStepperSelected;
         }
 
+        internal void SetOutputTypeComboBox(OutputConfigItem cfg)
+        {
+            OutputTypeComboBox.SelectedIndex = 0;
+
+            if (cfg.DisplayType == "InputAction")
+            {
+                OutputTypeComboBox.SelectedIndex = 1;
+            }
+            else if (SerialNumber.ExtractSerial(config.DisplaySerial) == MQTTManager.Serial)
+            {
+                OutputTypeComboBox.SelectedIndex = 2;
+            }
+        }
+
         internal void syncFromConfig(OutputConfigItem cfg)
         {
             originalConfig = cfg.Clone() as OutputConfigItem;
             config = cfg;
 
-            OutputTypeComboBox.SelectedIndex = (config.DisplayType == "InputAction") ? 1 : 0;
+            SetOutputTypeComboBox(config);
 
             if (OutputTypeIsDisplay())
             {
+                OutputTypeComboBox.SelectedIndex = 0;
+
                 if (config.DisplaySerial != null && config.DisplaySerial != "")
                 {
                     if (!ComboBoxHelper.SetSelectedItemByValue(displayModuleNameComboBox, config.DisplaySerial))
@@ -173,8 +192,10 @@ namespace MobiFlight.UI.Panels.OutputWizard
                         break;
                 }
             }
-            else
+            else if (OutputTypeIsInputAction())
             {
+                OutputTypeComboBox.SelectedIndex = 1;
+
                 AnalogInputConfig analogInputConfig = new AnalogInputConfig();
                 analogInputConfig.onChange = config.AnalogInputConfig?.onChange;
                 analogPanel1.syncFromConfig(analogInputConfig);
@@ -187,6 +208,16 @@ namespace MobiFlight.UI.Panels.OutputWizard
                 InputTypeButtonRadioButton.Checked = config.AnalogInputConfig?.onChange == null;
                 InputTypeAnalogRadioButton.Checked = config.AnalogInputConfig?.onChange != null;
             }
+            else if (OutputTypeIsMqttServer())
+            {
+                OutputTypeComboBox.SelectedIndex = 2;
+
+                mqttTopicTextBox.Text = config.MqttMessage.Topic;
+            }
+            else
+            {
+                Log.Instance.log($"Selected intput type {config.DisplayType} isn't supported", LogSeverity.Debug);
+            }
         }
 
         private bool OutputTypeIsDisplay()
@@ -197,6 +228,11 @@ namespace MobiFlight.UI.Panels.OutputWizard
         private bool OutputTypeIsInputAction()
         {
             return OutputTypeComboBox.SelectedIndex == 1;
+        }
+
+        private bool OutputTypeIsMqttServer()
+        {
+            return OutputTypeComboBox.SelectedIndex == 2;
         }
 
         private void StepperPanel_OnStepperSelected(object sender, StepperConfigChangedEventArgs e)
@@ -308,6 +344,12 @@ namespace MobiFlight.UI.Panels.OutputWizard
                     config.ButtonInputConfig = tmpConfig;
                     config.AnalogInputConfig = null;
                 }
+            }
+            else if (OutputTypeIsMqttServer())
+            {
+                config.DisplaySerial = $"MQTTServer / {MQTTManager.Serial}";
+                config.DisplayType = MqttMessageConfig.TYPE;
+                config.MqttMessage.Topic = mqttTopicTextBox.Text;
             }
         }
 
@@ -833,6 +875,8 @@ namespace MobiFlight.UI.Panels.OutputWizard
 
             InputActionTypePanel.Visible = OutputTypeIsInputAction();
             inputActionGroupBox.Visible = OutputTypeIsInputAction();
+
+            mqttMessageGroupBox.Visible = OutputTypeIsMqttServer();
         }
 
         private void InputTypeButtonRadioButton_CheckedChanged(object sender, EventArgs e)
