@@ -1,14 +1,8 @@
 ﻿using MQTTnet.Client;
 using MQTTnet;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MQTTnet.Server;
-using static SimpleSolutions.Usb.ArcazeCommand;
-using System.Runtime.CompilerServices;
 
 namespace MobiFlight.MQTT
 {
@@ -32,28 +26,27 @@ namespace MobiFlight.MQTT
 
         public static async Task Connect()
         {
-            //var settings = new MQTTServerSettings()
-            //{
-            //    Address = "192.168.1.172",
-            //    Port = 1883,
-            //    Username = "mqtt"
-            //};
-
-            //settings.Save();
-
             var settings = MQTTServerSettings.Load();
 
             mqttFactory = new MqttFactory();
-
             mqttClient = mqttFactory.CreateMqttClient();
 
-            // Use builder classes where possible in this project.
-            var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer(settings.Address, settings.Port).WithCredentials(settings.Username, "password").Build();
+            var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer(settings.Address, settings.Port);
+
+            // Only use username/password authentication if the username setting is set to something.
+            if (!string.IsNullOrWhiteSpace(settings.Username))
+            {
+                var unsecurePassword = settings.GetUnsecurePassword();
+                mqttClientOptions.WithCredentials(settings.Username, unsecurePassword);
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+                unsecurePassword = "";
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+            }
 
             // This will throw an exception if the server is not available.
             // The result from this message returns additional data which was sent 
             // from the server. Please refer to the MQTT protocol specification for details.
-            await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+            await mqttClient.ConnectAsync(mqttClientOptions.Build(), CancellationToken.None);
 
             Log.Instance.log($"MQTT: Connected to {settings.Address}:{settings.Port}.", LogSeverity.Debug);
         }

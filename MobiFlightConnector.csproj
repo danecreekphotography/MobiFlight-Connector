@@ -230,6 +230,7 @@
     <Compile Include="Base\SerialNumber.cs" />
     <Compile Include="Base\AppTelemetry.cs" />
     <Compile Include="Base\WriteCacheInterface.cs" />
+    <Compile Include="ExtensionMethods\SecureStringExtensions.cs" />
     <Compile Include="HubHop\HubHopType.cs" />
     <Compile Include="HubHop\Msfs2020EventIdPresetList.cs" />
     <Compile Include="MobiFlight\Board.cs" />
