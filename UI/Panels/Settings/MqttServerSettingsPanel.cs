@@ -1,12 +1,6 @@
 ﻿using MobiFlight.MQTT;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security;
 using System.Windows.Forms;
 
 namespace MobiFlight.UI.Panels.Settings
@@ -14,6 +8,7 @@ namespace MobiFlight.UI.Panels.Settings
     public partial class MqttServerSettingsPanel : UserControl
     {
         private MQTTServerSettings settings;
+        private bool passwordChanged = false;
 
         public MqttServerSettingsPanel()
         {
@@ -27,7 +22,11 @@ namespace MobiFlight.UI.Panels.Settings
             addressTextBox.Text = settings.Address;
             portTextBox.Text = settings.Port.ToString();
             usernameTextBox.Text = settings.Username;
-            passwordTextBox.Text = settings.Password;
+            passwordTextBox.Text = "****";
+
+            // After setting the password text box to a placeholder value register for TextChanged events
+            // so we can track whether the user changed the password and it needs to be saved after.
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
         }
 
         public void SaveSettings()
@@ -35,7 +34,13 @@ namespace MobiFlight.UI.Panels.Settings
             settings.Address = addressTextBox.Text;
             settings.Port = Convert.ToInt32(settings.Port);
             settings.Username = usernameTextBox.Text;
-            settings.Password = passwordTextBox.Text;
+
+            if (passwordChanged) { 
+                var securePassword = new SecureString();
+                Array.ForEach(passwordTextBox.Text.ToCharArray(), securePassword.AppendChar);
+                passwordTextBox.Text = ""; // Clear the password from the UI as soon as possible
+                settings.SetPassword(securePassword);
+            }
 
             settings.Save();
         }
@@ -47,6 +52,11 @@ namespace MobiFlight.UI.Panels.Settings
             {
                 e.Handled = true;
             }
+        }
+
+        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            passwordChanged = true;
         }
     }
 }
