@@ -3,15 +3,17 @@ using MQTTnet;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 namespace MobiFlight.MQTT
 {
     internal static class MQTTManager
     {
         public static string Serial = "MQTTServer";
-        public static MqttFactory mqttFactory;
-        public static IMqttClient mqttClient;
+        public static event Func<MqttClientConnectedEventArgs, Task> ConnectedAsync;
 
+        private static MqttFactory mqttFactory;
+        private static IMqttClient mqttClient;
         private static readonly Dictionary<string, string> outputCache = new Dictionary<string, string>();
 
         /// <summary>
@@ -24,6 +26,10 @@ namespace MobiFlight.MQTT
             return serial == Serial;
         }
 
+        /// <summary>
+        /// Connects to an MQTT server using the settings saved in the app config.
+        /// </summary>
+        /// <returns>A task.</returns>
         public static async Task Connect()
         {
             var settings = MQTTServerSettings.Load();
@@ -43,12 +49,28 @@ namespace MobiFlight.MQTT
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
             }
 
+            // Add incoming message handler prior to connecting so queued events are processed.
+            mqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
+            mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
+
             // This will throw an exception if the server is not available.
             // The result from this message returns additional data which was sent 
             // from the server. Please refer to the MQTT protocol specification for details.
             await mqttClient.ConnectAsync(mqttClientOptions.Build(), CancellationToken.None);
 
             Log.Instance.log($"MQTT: Connected to {settings.Address}:{settings.Port}.", LogSeverity.Debug);
+        }
+
+        private static Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
+        {
+            ConnectedAsync?.Invoke(arg);
+            return Task.CompletedTask;
+        }
+
+        private static Task MqttClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+        {
+            Log.Instance.log($"MQTT: Received incoming message.", LogSeverity.Debug);
+            return Task.CompletedTask;
         }
 
         public static async Task Publish(string topic, string payload)
@@ -71,6 +93,37 @@ namespace MobiFlight.MQTT
             Log.Instance.log($"MQTT: Published {payload} to {topic}.", LogSeverity.Debug);
         }
 
+        /// <summary>
+        /// Subscribes to an MQTT topic. This method shouldn't be called until after the Connect() task completes.
+        /// Use the MQTTServer.ConnectedAsync event to determine when the connection process is complete.
+        /// </summary>
+        /// <param name="topic">The MQTT topic to subscribe to.</param>
+        /// <returns>A task.</returns>
+        public static async Task Subscribe(string topic)
+        {
+            if (!mqttClient.IsConnected)
+            {
+                Log.Instance.log("MQTT: Unable to subscribe to topic, client isnt' connected.", LogSeverity.Error);
+                return;
+            }
+
+            var mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
+                .WithTopicFilter(
+                    f =>
+                    {
+                        f.WithTopic(topic);
+                    })
+                .Build();
+
+            var response = await mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
+
+            Log.Instance.log($"MQTT: Subscribed to {topic}.", LogSeverity.Debug);
+        }
+
+        /// <summary>
+        /// Disconnects from the MQTT server.
+        /// </summary>
+        /// <returns>A task.</returns>
         public static async Task Disconnect()
         {
             // Send a clean disconnect to the server by calling _DisconnectAsync_. Without this the TCP connection
