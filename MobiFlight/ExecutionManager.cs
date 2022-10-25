@@ -261,7 +261,7 @@ namespace MobiFlight
         {
             simConnectCache.Start();
             xplaneCache.Start();
-            MQTTManager.Connect();
+            MQTTManager.Connect().Forget();
             timer.Enabled = true;
         }
 
@@ -271,7 +271,7 @@ namespace MobiFlight
             isExecuting = false;
             mobiFlightCache.Stop();
             simConnectCache.Stop();
-            MQTTManager.Disconnect();
+            MQTTManager.Disconnect().Forget();
             xplaneCache.Stop();
             joystickManager.Stop();
             ClearErrorMessages();
@@ -728,7 +728,7 @@ namespace MobiFlight
 
             if (cfg.DisplayType == MqttMessageConfig.TYPE)
             {
-                MQTTManager.Publish(cfg.MqttMessage.Topic, value);
+                MQTTManager.Publish(cfg.MqttMessage.Topic, value).Forget();
                 return value.ToString();
             }
 
