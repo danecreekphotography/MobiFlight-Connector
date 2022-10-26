@@ -213,6 +213,7 @@ namespace MobiFlight.UI.Panels.OutputWizard
                 OutputTypeComboBox.SelectedIndex = 2;
 
                 mqttTopicTextBox.Text = config.MqttMessage.Topic;
+                mqttValuePrefixTextBox.Text = config.MqttMessage.ValuePrefix;
             }
             else
             {
@@ -350,6 +351,7 @@ namespace MobiFlight.UI.Panels.OutputWizard
                 config.DisplaySerial = $"MQTTServer / {MQTTManager.Serial}";
                 config.DisplayType = MqttMessageConfig.TYPE;
                 config.MqttMessage.Topic = mqttTopicTextBox.Text;
+                config.MqttMessage.ValuePrefix = mqttValuePrefixTextBox.Text;
             }
         }
 

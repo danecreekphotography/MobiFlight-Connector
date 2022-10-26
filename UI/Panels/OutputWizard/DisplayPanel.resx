@@ -550,7 +550,7 @@
     <value>Top</value>
   </data>
   <data name="testSettingsGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 151</value>
+    <value>0, 137</value>
   </data>
   <data name="testSettingsGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>457, 40</value>
@@ -586,7 +586,7 @@
     <value>0, 132</value>
   </data>
   <data name="groupBoxDisplaySettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>457, 19</value>
+    <value>457, 5</value>
   </data>
   <data name="groupBoxDisplaySettings.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -747,7 +747,7 @@ Value can be "1" or "0" to trigger "OnPress" and "OnRelease" respectively. </val
     <value>Top</value>
   </data>
   <data name="inputActionGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 227</value>
+    <value>0, 213</value>
   </data>
   <data name="inputActionGroupBox.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>0, 80</value>
@@ -783,7 +783,7 @@ Value can be "1" or "0" to trigger "OnPress" and "OnRelease" respectively. </val
     <value>0, 36</value>
   </data>
   <data name="OutputDevicePanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>457, 191</value>
+    <value>457, 177</value>
   </data>
   <data name="OutputDevicePanel.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -836,6 +836,57 @@ Value can be "1" or "0" to trigger "OnPress" and "OnRelease" respectively. </val
   <data name="mqttMessageGroupBox.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
   </data>
+  <data name="valuePrefixLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="valuePrefixLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="valuePrefixLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 48</value>
+  </data>
+  <data name="valuePrefixLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 13</value>
+  </data>
+  <data name="valuePrefixLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="valuePrefixLabel.Text" xml:space="preserve">
+    <value>Value prefix:</value>
+  </data>
+  <data name="&gt;&gt;valuePrefixLabel.Name" xml:space="preserve">
+    <value>valuePrefixLabel</value>
+  </data>
+  <data name="&gt;&gt;valuePrefixLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;valuePrefixLabel.Parent" xml:space="preserve">
+    <value>mqttMessageGroupBox</value>
+  </data>
+  <data name="&gt;&gt;valuePrefixLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="mqttValuePrefixTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>82, 45</value>
+  </data>
+  <data name="mqttValuePrefixTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>364, 20</value>
+  </data>
+  <data name="mqttValuePrefixTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;mqttValuePrefixTextBox.Name" xml:space="preserve">
+    <value>mqttValuePrefixTextBox</value>
+  </data>
+  <data name="&gt;&gt;mqttValuePrefixTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mqttValuePrefixTextBox.Parent" xml:space="preserve">
+    <value>mqttMessageGroupBox</value>
+  </data>
+  <data name="&gt;&gt;mqttValuePrefixTextBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="topicLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -864,7 +915,7 @@ Value can be "1" or "0" to trigger "OnPress" and "OnRelease" respectively. </val
     <value>mqttMessageGroupBox</value>
   </data>
   <data name="&gt;&gt;topicLabel.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="mqttTopicTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>49, 23</value>
@@ -885,13 +936,13 @@ Value can be "1" or "0" to trigger "OnPress" and "OnRelease" respectively. </val
     <value>mqttMessageGroupBox</value>
   </data>
   <data name="&gt;&gt;mqttTopicTextBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="mqttMessageGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>
   <data name="mqttMessageGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 338</value>
+    <value>0, 324</value>
   </data>
   <data name="mqttMessageGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>457, 111</value>
