@@ -728,7 +728,7 @@ namespace MobiFlight
 
             if (cfg.DisplayType == MqttMessageConfig.TYPE)
             {
-                MQTTManager.Publish(cfg.MqttMessage.Topic, value).Forget();
+                MQTTManager.Publish(cfg.MqttMessage.Topic, $"{cfg.MqttMessage.ValuePrefix}{value}").Forget();
                 return value.ToString();
             }
 

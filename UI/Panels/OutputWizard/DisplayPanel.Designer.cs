@@ -46,6 +46,8 @@
             this.displayPinTestButton = new System.Windows.Forms.Button();
             this.groupBoxDisplaySettings = new System.Windows.Forms.GroupBox();
             this.inputActionGroupBox = new System.Windows.Forms.GroupBox();
+            this.buttonPanel1 = new MobiFlight.UI.Panels.Input.ButtonPanel();
+            this.analogPanel1 = new MobiFlight.UI.Panels.Input.AnalogPanel();
             this.AnalogInputActionLabel = new System.Windows.Forms.Label();
             this.ButtonInputActionLabel = new System.Windows.Forms.Label();
             this.OutputDevicePanel = new System.Windows.Forms.Panel();
@@ -53,8 +55,8 @@
             this.mqttMessageGroupBox = new System.Windows.Forms.GroupBox();
             this.topicLabel = new System.Windows.Forms.Label();
             this.mqttTopicTextBox = new System.Windows.Forms.TextBox();
-            this.buttonPanel1 = new MobiFlight.UI.Panels.Input.ButtonPanel();
-            this.analogPanel1 = new MobiFlight.UI.Panels.Input.AnalogPanel();
+            this.valuePrefixLabel = new System.Windows.Forms.Label();
+            this.mqttValuePrefixTextBox = new System.Windows.Forms.TextBox();
             this.displayTypeGroupBox.SuspendLayout();
             this.InputActionTypePanel.SuspendLayout();
             this.DisplayTypePanel.SuspendLayout();
@@ -203,6 +205,16 @@
             this.inputActionGroupBox.Name = "inputActionGroupBox";
             this.inputActionGroupBox.TabStop = false;
             // 
+            // buttonPanel1
+            // 
+            resources.ApplyResources(this.buttonPanel1, "buttonPanel1");
+            this.buttonPanel1.Name = "buttonPanel1";
+            // 
+            // analogPanel1
+            // 
+            resources.ApplyResources(this.analogPanel1, "analogPanel1");
+            this.analogPanel1.Name = "analogPanel1";
+            // 
             // AnalogInputActionLabel
             // 
             resources.ApplyResources(this.AnalogInputActionLabel, "AnalogInputActionLabel");
@@ -229,6 +241,8 @@
             // mqttMessageGroupBox
             // 
             resources.ApplyResources(this.mqttMessageGroupBox, "mqttMessageGroupBox");
+            this.mqttMessageGroupBox.Controls.Add(this.valuePrefixLabel);
+            this.mqttMessageGroupBox.Controls.Add(this.mqttValuePrefixTextBox);
             this.mqttMessageGroupBox.Controls.Add(this.topicLabel);
             this.mqttMessageGroupBox.Controls.Add(this.mqttTopicTextBox);
             this.mqttMessageGroupBox.Name = "mqttMessageGroupBox";
@@ -244,15 +258,15 @@
             resources.ApplyResources(this.mqttTopicTextBox, "mqttTopicTextBox");
             this.mqttTopicTextBox.Name = "mqttTopicTextBox";
             // 
-            // buttonPanel1
+            // valuePrefixLabel
             // 
-            resources.ApplyResources(this.buttonPanel1, "buttonPanel1");
-            this.buttonPanel1.Name = "buttonPanel1";
+            resources.ApplyResources(this.valuePrefixLabel, "valuePrefixLabel");
+            this.valuePrefixLabel.Name = "valuePrefixLabel";
             // 
-            // analogPanel1
+            // mqttValuePrefixTextBox
             // 
-            resources.ApplyResources(this.analogPanel1, "analogPanel1");
-            this.analogPanel1.Name = "analogPanel1";
+            resources.ApplyResources(this.mqttValuePrefixTextBox, "mqttValuePrefixTextBox");
+            this.mqttValuePrefixTextBox.Name = "mqttValuePrefixTextBox";
             // 
             // DisplayPanel
             // 
@@ -308,5 +322,7 @@
         private System.Windows.Forms.GroupBox mqttMessageGroupBox;
         private System.Windows.Forms.Label topicLabel;
         private System.Windows.Forms.TextBox mqttTopicTextBox;
+        private System.Windows.Forms.Label valuePrefixLabel;
+        private System.Windows.Forms.TextBox mqttValuePrefixTextBox;
     }
 }

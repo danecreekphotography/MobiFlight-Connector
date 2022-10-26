@@ -12,6 +12,7 @@ namespace MobiFlight.OutputConfig
         public const string TYPE = "MQTT Message";
 
         public string Topic { get; set; }
+        public string ValuePrefix { get; set; }
 
         public MqttMessageConfig()
         {
@@ -22,7 +23,8 @@ namespace MobiFlight.OutputConfig
         {
             return (obj != null) && 
                 (obj is MqttMessageConfig) && 
-                this.Topic == (obj as MqttMessageConfig).Topic;
+                this.Topic == (obj as MqttMessageConfig).Topic &&
+                this.ValuePrefix == (obj as MqttMessageConfig).ValuePrefix;
         }
 
         public void ReadXml(XmlReader reader)
@@ -30,12 +32,14 @@ namespace MobiFlight.OutputConfig
             if (!String.IsNullOrEmpty(reader["topic"]))
             {
                 Topic = reader["topic"];
+                ValuePrefix = reader["valuePrefix"];
             }
         }
 
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString("topic", Topic);
+            writer.WriteAttributeString("valuePrefix", ValuePrefix);
         }
 
         public override string ToString()
@@ -47,7 +51,8 @@ namespace MobiFlight.OutputConfig
         {
             return new MqttMessageConfig()
             {
-                Topic = Topic
+                Topic = Topic,
+                ValuePrefix = ValuePrefix
             };
         }
     }
