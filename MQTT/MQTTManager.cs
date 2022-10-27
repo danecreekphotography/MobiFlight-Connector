@@ -49,10 +49,23 @@ namespace MobiFlight.MQTT
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
             }
 
-            // Only use TLS if requested.
+            // Only use TLS and validate the certificate if requested.
             if (settings.EncryptConnection)
             {
-                mqttClientOptions.WithTls();
+                if (settings.ValidateCertificate)
+                {
+                    mqttClientOptions.WithTls();
+
+                }
+                else
+                {
+                    // From https://github.com/dotnet/MQTTnet/blob/master/Samples/Client/Client_Connection_Samples.cs
+                    mqttClientOptions.WithTls(
+                        o =>
+                        {
+                            o.CertificateValidationHandler = _ => true;
+                        });
+                }
             }
 
             // Add incoming message handler prior to connecting so queued events are processed.

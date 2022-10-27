@@ -12,8 +12,8 @@ namespace MobiFlight.MQTT
         public string Address { get; set; }
         public int Port { get; set; }
         public string Username { get; set; }        
-
         public bool EncryptConnection { get; set; }
+        public bool ValidateCertificate { get; set; }
 
         public byte[] EncryptedPassword { get; set; }
 
