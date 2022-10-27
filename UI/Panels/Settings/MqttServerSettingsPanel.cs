@@ -24,6 +24,8 @@ namespace MobiFlight.UI.Panels.Settings
             passwordTextBox.Text = "****";
             portTextBox.Text = settings.Port.ToString();
             usernameTextBox.Text = settings.Username;
+            validateCertificateCheckbox.Checked = settings.ValidateCertificate;
+            validateCertificateCheckbox.Enabled = encryptConectionCheckbox.Checked;
 
             // After setting the password text box to a placeholder value register for TextChanged events
             // so we can track whether the user changed the password and it needs to be saved after.
@@ -36,6 +38,7 @@ namespace MobiFlight.UI.Panels.Settings
             settings.EncryptConnection = encryptConectionCheckbox.Checked;
             settings.Port = Convert.ToInt32(settings.Port);
             settings.Username = usernameTextBox.Text;
+            settings.ValidateCertificate = validateCertificateCheckbox.Checked;
 
             if (passwordChanged) { 
                 var securePassword = new SecureString();
@@ -59,6 +62,11 @@ namespace MobiFlight.UI.Panels.Settings
         private void passwordTextBox_TextChanged(object sender, EventArgs e)
         {
             passwordChanged = true;
+        }
+
+        private void encryptConectionCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            validateCertificateCheckbox.Enabled = encryptConectionCheckbox.Checked;
         }
     }
 }

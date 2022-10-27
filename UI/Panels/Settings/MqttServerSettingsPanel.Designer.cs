@@ -37,6 +37,7 @@
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.passwordTextBox = new System.Windows.Forms.MaskedTextBox();
             this.encryptConectionCheckbox = new System.Windows.Forms.CheckBox();
+            this.validateCertificateCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -115,11 +116,23 @@
             this.encryptConectionCheckbox.TabIndex = 8;
             this.encryptConectionCheckbox.Text = "Encrypt connection (TLS)";
             this.encryptConectionCheckbox.UseVisualStyleBackColor = true;
+            this.encryptConectionCheckbox.CheckedChanged += new System.EventHandler(this.encryptConectionCheckbox_CheckedChanged);
+            // 
+            // validateCertificateCheckbox
+            // 
+            this.validateCertificateCheckbox.AutoSize = true;
+            this.validateCertificateCheckbox.Location = new System.Drawing.Point(10, 146);
+            this.validateCertificateCheckbox.Name = "validateCertificateCheckbox";
+            this.validateCertificateCheckbox.Size = new System.Drawing.Size(113, 17);
+            this.validateCertificateCheckbox.TabIndex = 9;
+            this.validateCertificateCheckbox.Text = "Validate certificate";
+            this.validateCertificateCheckbox.UseVisualStyleBackColor = true;
             // 
             // MqttServerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.validateCertificateCheckbox);
             this.Controls.Add(this.encryptConectionCheckbox);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.usernameTextBox);
@@ -147,5 +160,6 @@
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.MaskedTextBox passwordTextBox;
         private System.Windows.Forms.CheckBox encryptConectionCheckbox;
+        private System.Windows.Forms.CheckBox validateCertificateCheckbox;
     }
 }
