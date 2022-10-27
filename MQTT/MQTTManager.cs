@@ -49,6 +49,12 @@ namespace MobiFlight.MQTT
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
             }
 
+            // Only use TLS if requested.
+            if (settings.EncryptConnection)
+            {
+                mqttClientOptions.WithTls();
+            }
+
             // Add incoming message handler prior to connecting so queued events are processed.
             mqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
             mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
