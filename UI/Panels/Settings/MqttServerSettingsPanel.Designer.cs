@@ -36,6 +36,7 @@
             this.portTextBox = new System.Windows.Forms.TextBox();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.passwordTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.encryptConectionCheckbox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -105,10 +106,21 @@
             this.passwordTextBox.TabIndex = 7;
             this.passwordTextBox.UseSystemPasswordChar = true;
             // 
+            // encryptConectionCheckbox
+            // 
+            this.encryptConectionCheckbox.AutoSize = true;
+            this.encryptConectionCheckbox.Location = new System.Drawing.Point(10, 123);
+            this.encryptConectionCheckbox.Name = "encryptConectionCheckbox";
+            this.encryptConectionCheckbox.Size = new System.Drawing.Size(147, 17);
+            this.encryptConectionCheckbox.TabIndex = 8;
+            this.encryptConectionCheckbox.Text = "Encrypt connection (TLS)";
+            this.encryptConectionCheckbox.UseVisualStyleBackColor = true;
+            // 
             // MqttServerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.encryptConectionCheckbox);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.portTextBox);
@@ -134,5 +146,6 @@
         private System.Windows.Forms.TextBox portTextBox;
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.MaskedTextBox passwordTextBox;
+        private System.Windows.Forms.CheckBox encryptConectionCheckbox;
     }
 }

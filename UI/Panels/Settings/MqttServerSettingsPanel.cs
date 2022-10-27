@@ -20,9 +20,10 @@ namespace MobiFlight.UI.Panels.Settings
             settings = MQTTServerSettings.Load();
 
             addressTextBox.Text = settings.Address;
+            encryptConectionCheckbox.Checked = settings.EncryptConnection;
+            passwordTextBox.Text = "****";
             portTextBox.Text = settings.Port.ToString();
             usernameTextBox.Text = settings.Username;
-            passwordTextBox.Text = "****";
 
             // After setting the password text box to a placeholder value register for TextChanged events
             // so we can track whether the user changed the password and it needs to be saved after.
@@ -32,6 +33,7 @@ namespace MobiFlight.UI.Panels.Settings
         public void SaveSettings()
         {
             settings.Address = addressTextBox.Text;
+            settings.EncryptConnection = encryptConectionCheckbox.Checked;
             settings.Port = Convert.ToInt32(settings.Port);
             settings.Username = usernameTextBox.Text;
 
