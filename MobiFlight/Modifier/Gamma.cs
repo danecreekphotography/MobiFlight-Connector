@@ -11,42 +11,30 @@ namespace MobiFlight.Modifier
 {
     public class Gamma : ModifierBase
     {
-        private readonly int[] gamma8 = new int[]
-        {
-            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,
-            1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,
-            2,  3,  3,  3,  3,  3,  3,  3,  4,  4,  4,  4,  4,  5,  5,  5,
-            5,  6,  6,  6,  6,  7,  7,  7,  7,  8,  8,  8,  9,  9,  9, 10,
-           10, 10, 11, 11, 11, 12, 12, 13, 13, 13, 14, 14, 15, 15, 16, 16,
-           17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 24, 24, 25,
-           25, 26, 27, 27, 28, 29, 29, 30, 31, 32, 32, 33, 34, 35, 35, 36,
-           37, 38, 39, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 50,
-           51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67, 68,
-           69, 70, 72, 73, 74, 75, 77, 78, 79, 81, 82, 83, 85, 86, 87, 89,
-           90, 92, 93, 95, 96, 98, 99,101,102,104,105,107,109,110,112,114,
-          115,117,119,120,122,124,126,127,129,131,133,135,137,138,140,142,
-          144,146,148,150,152,154,156,158,160,162,164,167,169,171,173,175,
-          177,180,182,184,186,189,191,193,196,198,200,203,205,208,210,213,
-          215,218,220,223,225,228,231,233,236,239,241,244,247,249,252,255
-        };
-
         private readonly System.Globalization.CultureInfo serializationCulture = new System.Globalization.CultureInfo("en");
-        public bool Invert = false;
+        private int maxIn = 255;
+        private int maxOut = 255;
+        private double gamma = 2.8;
 
         public override void ReadXml(XmlReader reader)
         {
             if (reader["active"] != null)
                 Active = bool.Parse(reader["active"]);
-            if (reader["invert"] != null)
-                Invert = bool.Parse(reader["invert"]);
+            if (reader["maxIn"] != null)
+                maxIn = int.Parse(reader["maxIn"]);
+            if (reader["maxOut"] != null)
+                maxOut = int.Parse(reader["maxOut"]);
+            if (reader["gamma"] != null)
+                gamma = double.Parse(reader["gamma"]);
         }
 
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("gamma");
             writer.WriteAttributeString("active", Active.ToString());
-            writer.WriteAttributeString("invert", Invert.ToString());
+            writer.WriteAttributeString("maxIn", maxIn.ToString());
+            writer.WriteAttributeString("maxOut", maxOut.ToString());
+            writer.WriteAttributeString("gamma", gamma.ToString());
             writer.WriteEndElement();
         }
 
@@ -55,7 +43,9 @@ namespace MobiFlight.Modifier
             var Clone = new Gamma
             {
                 Active = Active,
-                Invert = Invert
+                maxIn = maxIn,
+                maxOut = maxOut,
+                gamma = gamma
             };
             return Clone;
         }
@@ -65,7 +55,9 @@ namespace MobiFlight.Modifier
             return
                 obj != null && obj is Gamma &&
                 this.Active == (obj as Gamma).Active &&
-                this.Invert == (obj as Gamma).Invert ;
+                this.maxIn == (obj as Gamma).maxIn &&
+                this.maxOut == (obj as Gamma).maxOut &&
+                this.gamma== (obj as Gamma).gamma;
         }
 
         public override ConnectorValue Apply(ConnectorValue value, List<ConfigRefValue> configRefs)
@@ -75,24 +67,13 @@ namespace MobiFlight.Modifier
                 return value;
             }
 
-            // Convert the raw float value to an int so it can be used to index into the
-            // gamma array.
-            var intVal = (int)Math.Round(value.Float64);
+            // Apply the gamma correction. Math comes from https://learn.adafruit.com/led-tricks-gamma-correction/the-longer-fix.
+            var correctedValue = Math.Pow(value.Float64 / maxIn, gamma) * maxOut + 0.5;
 
-            // Bounds check the value to ensure we don't go off the end of the gamma array.
-            if (intVal < 0)
-            {
-                intVal = 0;
-            }
-            if (intVal >= gamma8.Length)
-            {
-                intVal = gamma8.Length - 1;
-            }
+            Log.Instance.log($"Gamma correcting {value.Float64} to {correctedValue}", LogSeverity.Debug);
 
-            Log.Instance.log($"Gamma correcting {intVal} to {gamma8[intVal]}", LogSeverity.Debug);
-
-            // Look up the gamma corrected value then send it back as the new value.
-            value.Float64 = gamma8[intVal];
+            // Send out the corrected value.
+            value.Float64 = correctedValue;
             return value;
         }
     }
