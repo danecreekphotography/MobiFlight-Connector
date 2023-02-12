@@ -162,6 +162,12 @@ namespace MobiFlight.Modifier
                         modifiers.Add(c);
                         break;
 
+                    case "gamma":
+                        var g = new Gamma();
+                        g.ReadXml(reader);
+                        modifiers.Add(g);
+                        break;
+
                     case "interpolation":
                         var i = new Interpolation();
                         i.ReadXml(reader);
