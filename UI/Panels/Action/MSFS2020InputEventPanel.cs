@@ -19,6 +19,13 @@ namespace MobiFlight.UI.Panels.Action
 
         internal void syncFromConfig(InputConfig.MSFS2020InputEventAction inputAction)
         {
+            if (inputAction == null)
+            {
+                HashTextBox.Text = string.Empty;
+                ValueTextBox.Text = string.Empty;
+                return;
+            }
+
             HashTextBox.Text = inputAction.Hash;
             ValueTextBox.Text = inputAction.Value.ToString();
         }
