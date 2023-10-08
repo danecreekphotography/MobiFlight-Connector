@@ -282,7 +282,6 @@
             resources.GetString("preconditionPinSerialComboBox.Items1")});
             resources.ApplyResources(this.preconditionPinSerialComboBox, "preconditionPinSerialComboBox");
             this.preconditionPinSerialComboBox.Name = "preconditionPinSerialComboBox";
-            this.preconditionPinSerialComboBox.SelectedIndexChanged += new System.EventHandler(this.preconditionPinSerialComboBox_SelectedIndexChanged);
             this.preconditionPinSerialComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.preconditionPinSerialComboBox_Validating);
             // 
             // preconditionPinSerialLabel

@@ -410,9 +410,9 @@ namespace MobiFlight.SimConnectMSFS
             Log.Instance.log($"Pretending to set {Hash} to {Value}", LogSeverity.Info);
 
             // Giant hack. This should be TryParse instead at a minimum.
-            // ulong eventHash = ulong.Parse(Hash);
-            // m_oSimConnect.SetInputEvent(eventHash, Value);
-;        }
+            ulong eventHash = ulong.Parse(Hash);
+            m_oSimConnect.SetInputEvent(eventHash, Value);
+        }
 
         private void RegisterSimVar(string SimVarName)
         {

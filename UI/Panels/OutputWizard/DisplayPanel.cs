@@ -184,11 +184,6 @@ namespace MobiFlight.UI.Panels.OutputWizard
             return OutputTypeComboBox.SelectedIndex == 1;
         }
 
-        internal void SetArcazeSettings(Dictionary<string, string> arcazeFirmware, Dictionary<string, ArcazeModuleSettings> moduleSettings)
-        {
-            this.arcazeFirmware = arcazeFirmware;
-            this.moduleSettings = moduleSettings;
-        }
         internal void syncToConfig()
         {
             if (OutputTypeIsDisplay()) 
@@ -595,72 +590,6 @@ namespace MobiFlight.UI.Panels.OutputWizard
             displayShiftRegisterPanel.SetAddresses(shiftRegisters);
 
             displayLcdDisplayPanel.SetAddresses(lcdDisplays);
-
-            return panelEnabled;
-        }
-
-        private bool InitializeArcazeDisplays(ComboBox cb, string serial)
-        {
-            bool panelEnabled = true;
-
-            switch (cb.SelectedItem.ToString())
-            {
-                case "DisplayDriver":
-                    panelEnabled = ushort.Parse(arcazeFirmware[serial]) > 0x529;
-                    break;
-
-                case "LedDriver2":
-                    panelEnabled = ushort.Parse(arcazeFirmware[serial]) > 0x554;
-                    break;
-
-                case "LedDriver3":
-                    panelEnabled = ushort.Parse(arcazeFirmware[serial]) > 0x550;
-                    break;
-            }
-
-            displayPinPanel.displayPinBrightnessPanel.Visible = (moduleSettings[serial].type == SimpleSolutions.Usb.ArcazeCommand.ExtModuleType.LedDriver3);
-            displayPinPanel.displayPinBrightnessPanel.Enabled = (displayPinPanel.displayPinBrightnessPanel.Visible && (cb.SelectedIndex > 1));
-
-            //preconditionPortComboBox.Items.Clear();
-            //preconditionPinComboBox.Items.Clear();
-
-            List<ListItem> ports = new List<ListItem>();
-
-            foreach (String v in ArcazeModule.getPorts())
-            {
-                ports.Add(new ListItem() { Label = v, Value = v });
-                if (v == "B" || v == "E" || v == "H" || v == "K")
-                {
-                    ports.Add(new ListItem() { Label = "-----", Value = "-----" });
-                }
-
-                if (v == "A" || v == "B")
-                {
-                    //preconditionPortComboBox.Items.Add(v);
-                }
-            }
-
-            displayPinPanel.SetPorts(ports);
-            displayBcdPanel.SetPorts(ports);
-
-            List<ListItem> pins = new List<ListItem>();
-            foreach (String v in ArcazeModule.getPins())
-            {
-                pins.Add(new ListItem() { Label = v, Value = v });
-                //preconditionPinComboBox.Items.Add(v);
-            }
-
-            displayPinPanel.SetPins(pins);
-            displayBcdPanel.SetPins(pins);
-            displayPinPanel.WideStyle = false;
-
-            List<ListItem> addr = new List<ListItem>();
-            List<ListItem> connectors = new List<ListItem>();
-            foreach (string v in ArcazeModule.getDisplayAddresses()) addr.Add(new ListItem() { Label = v, Value = v });
-            foreach (string v in ArcazeModule.getDisplayConnectors()) connectors.Add(new ListItem() { Label = v, Value = v });
-            displayLedDisplayPanel.WideStyle = false;
-            displayLedDisplayPanel.SetAddresses(addr);
-            displayLedDisplayPanel.SetConnectors(connectors);
 
             return panelEnabled;
         }

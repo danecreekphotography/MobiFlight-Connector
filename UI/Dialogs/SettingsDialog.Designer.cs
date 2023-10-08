@@ -34,7 +34,6 @@
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.ArcazeTabPage = new System.Windows.Forms.TabPage();
-            this.arcazePanel = new MobiFlight.UI.Panels.Settings.ArcazePanel();
             this.mfTreeViewImageList = new System.Windows.Forms.ImageList(this.components);
             this.mfModuleSettingsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,20 +97,6 @@
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
-            // 
-            // ArcazeTabPage
-            // 
-            this.ArcazeTabPage.Controls.Add(this.arcazePanel);
-            resources.ApplyResources(this.ArcazeTabPage, "ArcazeTabPage");
-            this.ArcazeTabPage.Name = "ArcazeTabPage";
-            this.ArcazeTabPage.UseVisualStyleBackColor = true;
-            this.ArcazeTabPage.Validating += new System.ComponentModel.CancelEventHandler(this.ledDisplaysTabPage_Validating);
-            // 
-            // arcazePanel
-            // 
-            resources.ApplyResources(this.arcazePanel, "arcazePanel");
-            this.arcazePanel.ModuleConfigChanged = false;
-            this.arcazePanel.Name = "arcazePanel";
             // 
             // mfTreeViewImageList
             // 
@@ -365,7 +350,6 @@
         private System.Windows.Forms.ToolStripMenuItem reloadConfigToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LcdDisplayToolStripMenuItem;
         private Panels.Settings.GeneralPanel generalPanel;
-        private Panels.Settings.ArcazePanel arcazePanel;
         private Panels.Settings.MobiFlightPanel mobiFlightPanel;
         private System.Windows.Forms.ToolStripMenuItem analogDeviceToolStripMenuItem;
     }
