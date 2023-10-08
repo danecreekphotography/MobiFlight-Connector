@@ -70,6 +70,11 @@ namespace MobiFlight.InputConfig
                 case MSFS2020CustomInputAction.TYPE:
                     action = new MSFS2020CustomInputAction();
                     break;
+
+                case MSFS2020InputEventAction.TYPE:
+                    action = new MSFS2020InputEventAction();
+                    break;
+
                 case XplaneInputAction.TYPE:
                     action = new XplaneInputAction();
                     break;

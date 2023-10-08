@@ -25,6 +25,7 @@ namespace MobiFlight.UI.Panels.Config
             ActionTypeComboBox.Items.Add(i18n._tr("none"));
             // --MSFS 2020 
             ActionTypeComboBox.Items.Add(InputConfig.MSFS2020CustomInputAction.Label);
+            ActionTypeComboBox.Items.Add(InputConfig.MSFS2020InputEventAction.Label);
 
             // -- Xplane
             ActionTypeComboBox.Items.Add(InputConfig.XplaneInputAction.Label);
@@ -100,6 +101,10 @@ namespace MobiFlight.UI.Panels.Config
 
                 case "MobiFlight.InputConfig.MSFS2020CustomInputAction":
                     ComboBoxHelper.SetSelectedItem(ActionTypeComboBox, MobiFlight.InputConfig.MSFS2020CustomInputAction.Label);
+                    break;
+
+                case "MobiFlight.InputConfig.MSFS2020InputEventAction":
+                    ComboBoxHelper.SetSelectedItem(ActionTypeComboBox, MobiFlight.InputConfig.MSFS2020InputEventAction.Label);
                     break;
 
                 case "MobiFlight.InputConfig.VariableInputAction":

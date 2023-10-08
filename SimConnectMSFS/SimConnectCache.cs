@@ -403,6 +403,17 @@ namespace MobiFlight.SimConnectMSFS
             WasmModuleClient.SetSimVar(m_oSimConnect, SimVarCode, WasmRuntimeClientData);   
         }
 
+        public void SetInputEvent(string Hash, double Value)
+        {
+            if (m_oSimConnect == null) return;
+
+            Log.Instance.log($"Pretending to set {Hash} to {Value}", LogSeverity.Info);
+
+            // Giant hack. This should be TryParse instead at a minimum.
+            ulong eventHash = ulong.Parse(Hash);
+            m_oSimConnect.SetInputEvent(eventHash, Value);
+        }
+
         private void RegisterSimVar(string SimVarName)
         {
             SimVar NewSimVar = new SimVar() { Name = SimVarName, ID = (uint) (SimVars.Count + SIMVAR_DATA_DEFINITION_OFFSET) };

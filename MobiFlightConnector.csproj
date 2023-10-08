@@ -57,7 +57,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MOBIFLIGHT DEBUG SIMCONNECT ARCAZE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;MOBIFLIGHT DEBUG SIMCONNECT</DefineConstants>
     <DocumentationFile>bin\Debug\MFConnector.xml</DocumentationFile>
     <WarningLevel>2</WarningLevel>
     <DebugType>full</DebugType>
@@ -127,11 +127,36 @@
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MOBIFLIGHT DEBUG SIMCONNECT</DefineConstants>
+    <DocumentationFile>bin\Debug\MFConnector.xml</DocumentationFile>
+    <WarningLevel>2</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS;MOBIFLIGHT RELEASE SIMCONNECT ARCAZE</DefineConstants>
+    <Optimize>true</Optimize>
+    <WarningLevel>2</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArcazeHid, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\ArcazeHid.dll</HintPath>
-    </Reference>
     <Reference Include="fsuipcClient, Version=3.3.3.403, Culture=neutral, PublicKeyToken=7e7559b53e380b17, processorArchitecture=MSIL">
       <HintPath>packages\FSUIPCClientDLL.3.3.3\lib\net462\fsuipcClient.dll</HintPath>
     </Reference>
@@ -145,7 +170,8 @@
       <HintPath>packages\Microsoft.ApplicationInsights.2.21.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.FlightSimulator.SimConnect, Version=10.0.61259.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86">
-      <HintPath>SimConnectFSX\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>SimConnectMSFS\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.1518.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Web.WebView2.1.0.1518.46\lib\net45\Microsoft.Web.WebView2.Core.dll</HintPath>
@@ -228,6 +254,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arcaze\ArcazeBcd4056.cs" />
+    <Compile Include="Arcaze\ArcazeCommandExecutionException.cs" />
+    <Compile Include="Arcaze\ArcazeIoBasic.cs" />
+    <Compile Include="Arcaze\ArcazeLedDigit.cs" />
+    <Compile Include="Arcaze\ArcazeLedDisplayConfig.cs" />
     <Compile Include="Base\AutoUpdateChecker.cs" />
     <Compile Include="Base\CacheInterface.cs" />
     <Compile Include="Base\ConfigRef.cs" />
@@ -261,6 +292,7 @@
     <Compile Include="MobiFlight\InputConfig\InputActionFactory.cs" />
     <Compile Include="MobiFlight\InputConfig\InputShiftRegisterConfig.cs" />
     <Compile Include="MobiFlight\InputConfig\MSFS2020CustomInputAction.cs" />
+    <Compile Include="MobiFlight\InputConfig\MSFS2020InputEventAction.cs" />
     <Compile Include="MobiFlight\InputConfig\XplaneInputAction.cs" />
     <Compile Include="MobiFlight\InputConfig\VariableInputAction.cs" />
     <Compile Include="MobiFlight\Joysticks\Joystick.cs" />
@@ -315,14 +347,6 @@
     <Compile Include="UI\Dialogs\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Arcaze\ArcazeModule.cs" />
-    <Compile Include="Arcaze\ArcazeBcd4056.cs" />
-    <Compile Include="Arcaze\ArcazeCache.cs" />
-    <Compile Include="Arcaze\ArcazeCommandExecutionException.cs" />
-    <Compile Include="Arcaze\ArcazeIoBasic.cs" />
-    <Compile Include="Arcaze\ArcazeLedDigit.cs" />
-    <Compile Include="Arcaze\ArcazeModuleSettings.cs" />
-    <Compile Include="Arcaze\ArcazeModuleInfo.cs" />
     <Compile Include="FSUIPC\FSUIPCCacheInterface.cs" />
     <Compile Include="MobiFlight\Config\Encoder.cs" />
     <Compile Include="MobiFlight\Config\EncoderSingleDetent.cs" />
@@ -402,6 +426,12 @@
     </Compile>
     <Compile Include="UI\Panels\About\LicenseReferenceControl.Designer.cs">
       <DependentUpon>LicenseReferenceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Action\MSFS2020InputEventPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Action\MSFS2020InputEventPanel.Designer.cs">
+      <DependentUpon>MSFS2020InputEventPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Panels\Action\MSFS2020CustomInputPanel.cs">
       <SubType>UserControl</SubType>
@@ -607,12 +637,6 @@
     <Compile Include="UI\Panels\Output\DisplayShiftRegisterPanel.Designer.cs">
       <DependentUpon>DisplayShiftRegisterPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Panels\Settings\ArcazePanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Panels\Settings\ArcazePanel.Designer.cs">
-      <DependentUpon>ArcazePanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Panels\Settings\GeneralPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -676,14 +700,12 @@
     <Compile Include="MobiFlight\OutputConfigItem.cs" />
     <Compile Include="Base\ConnectorValue.cs" />
     <Compile Include="Base\ConverterConfig.cs" />
-    <Compile Include="Arcaze\DeviceInfoAndCache.cs" />
     <Compile Include="Base\EventTimer.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MobiFlight\ExecutionManager.cs" />
     <Compile Include="FSUIPC\Fsuipc2Cache.cs" />
     <Compile Include="FSUIPC\fsuipcBCD.cs" />
-    <Compile Include="Arcaze\ArcazeLedDisplayConfig.cs" />
     <Compile Include="FSUIPC\FsuipcHelper.cs" />
     <Compile Include="FSUIPC\FSUIPCOffsetType.cs" />
     <Compile Include="UI\Dialogs\InputConfigWizard.cs">
@@ -966,6 +988,21 @@
     <None Include="Boards\arduino_uno.board.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Boards\CJ4 autopilot.board.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Boards\CJ4 MFD menu.board.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Boards\cj4elec.board.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Boards\Collins-FMS-3000.board.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Boards\deice.board.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Boards\mfboard.schema.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1164,6 +1201,13 @@
     <EmbeddedResource Include="UI\Panels\About\LicenseReferenceControl.resx">
       <DependentUpon>LicenseReferenceControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Action\MSFS2020InputEventPanel.de.resx">
+      <DependentUpon>MSFS2020InputEventPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Action\MSFS2020InputEventPanel.resx">
+      <DependentUpon>MSFS2020InputEventPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Action\MSFS2020CustomInputPanel.de.resx">
       <DependentUpon>MSFS2020CustomInputPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -1349,12 +1393,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Output\DisplayPinPanel.de.resx">
       <DependentUpon>DisplayPinPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Panels\Settings\ArcazePanel.de.resx">
-      <DependentUpon>ArcazePanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Panels\Settings\ArcazePanel.resx">
-      <DependentUpon>ArcazePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Settings\GeneralPanel.de.resx">
       <DependentUpon>GeneralPanel.cs</DependentUpon>
@@ -1695,7 +1733,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>xcopy /R /Y "$(ProjectDir)Lib\vJoyInterface.dll" "$(TargetDir)"
-xcopy /R /Y "$(ProjectDir)Lib\x86\SimConnect.dll" "$(TargetDir)"
+xcopy /R /Y "$(ProjectDir)Lib\SimConnect.dll" "$(TargetDir)"
 xcopy /R /E /Y /I "$(ProjectDir)MSFS2020-module" "$(TargetDir)MSFS2020-module"
 xcopy /R /E /Y /I "$(ProjectDir)Arduino" "$(TargetDir)Arduino"
 del "$(TargetDir)\log.txt"

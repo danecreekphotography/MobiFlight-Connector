@@ -1994,7 +1994,9 @@ namespace MobiFlight.UI
                 result = outputConfigItems
                         .Any(x => x?.SourceType == type) ||
                          inputConfigItems
-                        .Any(x => x?.GetInputActionsByType(typeof(MSFS2020CustomInputAction)).Count > 0);
+                        .Any(x => x?.GetInputActionsByType(typeof(MSFS2020CustomInputAction)).Count > 0) ||
+                         inputConfigItems
+                        .Any(x => x?.GetInputActionsByType(typeof(MSFS2020InputEventAction)).Count > 0);
             }
             else if (type == SourceType.FSUIPC)
             {

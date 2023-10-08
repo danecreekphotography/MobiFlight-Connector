@@ -399,42 +399,6 @@ namespace MobiFlight.UI.Panels.Config
             PreconditionTreeNodeChanged(preconditionListTreeView, null);
         }
 
-        private void preconditionPinSerialComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // get the deviceinfo for the current arcaze
-            ComboBox cb = preconditionPinSerialComboBox;
-            string serial = SerialNumber.ExtractSerial(cb.SelectedItem.ToString());
-            
-            if (serial.IndexOf("SN") != 0)
-            {
-                preconditionPortComboBox.Items.Clear();
-                preconditionPinComboBox.Items.Clear();
-
-                List<ListItem> ports = new List<ListItem>();
-
-                foreach (String v in ArcazeModule.getPorts())
-                {
-                    ports.Add(new ListItem() { Label = v, Value = v });
-                    if (v == "B" || v == "E" || v == "H" || v == "K")
-                    {
-                        ports.Add(new ListItem() { Label = "-----", Value = "-----" });
-                    }
-
-                    if (v == "A" || v == "B")
-                    {
-                        preconditionPortComboBox.Items.Add(v);
-                    }
-                }
-
-                List<ListItem> pins = new List<ListItem>();
-                foreach (String v in ArcazeModule.getPins())
-                {
-                    pins.Add(new ListItem() { Label = v, Value = v });
-                    preconditionPinComboBox.Items.Add(v);
-                }
-            }
-        }
-
         private void displayError(Control control, String message)
         {
             errorProvider.SetError(
