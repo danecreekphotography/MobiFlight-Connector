@@ -8,5 +8,6 @@ namespace MobiFlight.SimConnectMSFS
     public interface SimConnectCacheInterface : Base.CacheInterface, Base.WriteCacheInterface
     {
         void SetSimVar(String SimVarCode);
+        void SetInputEvent(string Hash, double Value);
     }
 }

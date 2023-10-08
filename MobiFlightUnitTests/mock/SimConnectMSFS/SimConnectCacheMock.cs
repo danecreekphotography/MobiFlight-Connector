@@ -126,6 +126,12 @@ namespace MobiFlightUnitTests.mock.SimConnectMSFS
             Writes.Add(SimVarCode);
             return;
         }
+
+        public void SetInputEvent(string Hash, double Value)
+        {
+            Writes.Add($"{Hash} {Value}");
+            return;
+        }
     }
 
     class FSUIPCMockOffset

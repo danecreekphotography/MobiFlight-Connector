@@ -111,6 +111,7 @@ namespace MobiFlight.UI.Panels.Input
             else if (type == "MobiFlight.InputConfig.RetriggerInputAction") value = MobiFlight.InputConfig.RetriggerInputAction.Label;
             else if (type == "MobiFlight.InputConfig.MSFS2020EventIdInputAction") value = MobiFlight.InputConfig.MSFS2020CustomInputAction.Label;
             else if (type == "MobiFlight.InputConfig.MSFS2020CustomInputAction") value = MobiFlight.InputConfig.MSFS2020CustomInputAction.Label;
+            else if (type == "MobiFlight.InputConfig.MSFS2020InputEventAction") value = MobiFlight.InputConfig.MSFS2020InputEventAction.Label;
             else if (type == "MobiFlight.InputConfig.VariableInputAction") value = MobiFlight.InputConfig.VariableInputAction.Label;
             else if (type == "MobiFlight.InputConfig.XplaneInputAction") value = MobiFlight.InputConfig.XplaneInputAction.Label;
 
@@ -229,6 +230,14 @@ namespace MobiFlight.UI.Panels.Input
 
                     break;
 
+                case InputConfig.MSFS2020InputEventAction.Label:
+                    panel = new MobiFlight.UI.Panels.Action.MSFS2020InputEventPanel();
+                    if (isOnPress && config != null && config.onPress != null)
+                        (panel as MobiFlight.UI.Panels.Action.MSFS2020InputEventPanel).syncFromConfig(config.onPress as MSFS2020InputEventAction);
+                    else if (!isOnPress && config != null && config.onRelease != null)
+                        (panel as MobiFlight.UI.Panels.Action.MSFS2020InputEventPanel).syncFromConfig(config.onRelease as MSFS2020InputEventAction);
+                    break;
+
                 case MobiFlight.InputConfig.XplaneInputAction.Label:
                     panel = new MobiFlight.UI.Panels.Action.XplaneInputPanel();
                     if (isOnPress && config != null && config.onPress != null)
@@ -330,6 +339,10 @@ namespace MobiFlight.UI.Panels.Input
                         config.onPress = (onPressActionConfigPanel.Controls[0] as MobiFlight.UI.Panels.Action.MSFS2020CustomInputPanel).ToConfig();
                         break;
 
+                    case MobiFlight.InputConfig.MSFS2020InputEventAction.Label:
+                        config.onPress = (onPressActionConfigPanel.Controls[0] as MobiFlight.UI.Panels.Action.MSFS2020InputEventPanel).ToConfig();
+                        break;
+
                     case MobiFlight.InputConfig.VariableInputAction.Label:                        
                         config.onPress = (onPressActionConfigPanel.Controls[0] as MobiFlight.UI.Panels.Action.VariableInputPanel).ToConfig();
                         break;
@@ -386,6 +399,10 @@ namespace MobiFlight.UI.Panels.Input
 
                     case MobiFlight.InputConfig.MSFS2020CustomInputAction.Label:
                         config.onRelease = (onReleaseActionConfigPanel.Controls[0] as MobiFlight.UI.Panels.Action.MSFS2020CustomInputPanel).ToConfig();
+                        break;
+
+                    case MobiFlight.InputConfig.MSFS2020InputEventAction.Label:
+                        config.onRelease = (onReleaseActionConfigPanel.Controls[0] as MobiFlight.UI.Panels.Action.MSFS2020InputEventPanel).ToConfig();
                         break;
 
                     case MobiFlight.InputConfig.VariableInputAction.Label:
