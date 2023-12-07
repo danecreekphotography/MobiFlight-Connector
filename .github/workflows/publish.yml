@@ -30,8 +30,12 @@ jobs:
         uses: darenm/Setup-VSTest@v1.2
 
       - name: Downgrade NSIS
-        shell: pwsh
-        run: .\Build\downgrade_nsis.ps1
+        uses: supplypike/setup-bin@v3
+        with:
+          uri: "https://downloads.sourceforge.net/project/nsis/NSIS%203/3.04/nsis-3.04-setup.exe"
+          name: "nsis-3.04-setup.exe"
+          version: "3.04"
+          command: nsis-3.04-setup.exe /S
 
       - name: Replace version in AssemblyInfo.cs
         run: (Get-Content "Properties/AssemblyInfo.cs") -replace '\("\d+\.\d+\.\d+(\.\d+)?"\)', '("${{ github.event.release.tag_name }}")' | Out-File "Properties/AssemblyInfo.cs"
