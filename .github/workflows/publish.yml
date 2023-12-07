@@ -38,7 +38,7 @@ jobs:
         shell: pwsh
 
       - name: Install NSIS 3.04
-        uses: repolevedavaj/install-nsis@v1
+        uses: repolevedavaj/install-nsis@v1.0.1
         with:
           nsis-version: 3.04
 
