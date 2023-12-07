@@ -39,9 +39,7 @@ jobs:
 
       - name: Downgrade NSIS
         shell: pwsh
-        run: |
-          .\Build\downgrade_nsis.ps1
-          makensis.exe /VERSION
+        run: .\Build\downgrade_nsis.ps1
 
       - name: Restore NuGet packages
         working-directory: ${{env.GITHUB_WORKSPACE}}
