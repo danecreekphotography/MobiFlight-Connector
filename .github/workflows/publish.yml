@@ -37,10 +37,9 @@ jobs:
         run: "type Properties/AssemblyInfo.cs"
         shell: pwsh
 
-      - name: Install NSIS 3.04
-        uses: repolevedavaj/install-nsis@v1.0.1
-        with:
-          nsis-version: 3.04
+      - name: Downgrade NSIS
+        shell: pwsh
+        run: .\Build\downgrade_nsis.ps1
 
       - name: Verify makensis version
         run: makensis.exe /VERSION
